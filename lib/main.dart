@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:portfolio_app/pages/homepage.dart';
 import 'package:portfolio_app/pages/loginpage.dart';
+import 'package:portfolio_app/pages/signup_screen.dart';
 import 'firebase_options.dart';
 import 'pages/homepage.dart';
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       //home: Homepage(),
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => LoginPage(),
+        "/": (context) => SignupScreen(),
         "/home": (context) => Homepage(),
         "/login": (context) => LoginPage(),
       },
