@@ -36,37 +36,40 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = true;
     });
-  }
 
-  //   // signup user using our authmethodds
-  //   //String res = await AuthMethods().signUpUser(
-  //       email: _emailController.text,
-  //       password: _passwordController.text,
-  //       username: _usernameController.text,
-  //       bio: _bioController.text,
-  //       file: _image!);
-  //   // if string returned is sucess, user has been created
-  //   if (res == "success") {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     // navigate to the home screen
-  //     Navigator.of(context).pushReplacement(
-  //       MaterialPageRoute(
-  //         builder: (context) => const ResponsiveLayout(
-  //           mobileScreenLayout: MobileScreenLayout(),
-  //           webScreenLayout: WebScreenLayout(),
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //     // show the error
-  //     showSnackBar(context, res);
-  //   }
-  // }
+    // signup user using our authmethodds
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      organization: _bioController.text,
+      post: _postController.text,
+      file: _image!,
+    );
+    //if string returned is sucess, user has been created
+    if (res == "success") {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    //     // navigate to the home screen
+    //     Navigator.of(context).pushReplacement(
+    //       MaterialPageRoute(
+    //         builder: (context) => const ResponsiveLayout(
+    //           mobileScreenLayout: MobileScreenLayout(),
+    //           webScreenLayout: WebScreenLayout(),
+    //         ),
+    //       ),
+    //     );
+    //   } else {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //     // show the error
+    //     showSnackBar(context, res);
+    //   }
+    // }
+  }
 
   selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
@@ -161,17 +164,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 textEditingController: _postController,
               ),
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    organization: _bioController.text,
-                    post: _postController.text,
-                    file: _image!,
-                  );
-                  print(res);
-                },
+                onTap: signUpUser,
                 child: Container(
                   child: !_isLoading
                       ? const Text(

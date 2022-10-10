@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 //import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:portfolio_app/pages/homepage.dart';
+import 'package:portfolio_app/pages/utils.dart';
 
+import '../resources/auth_methods.dart';
 import 'job.dart';
 import 'login_text.dart';
 
@@ -20,6 +22,10 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  final joBcontroller = Get.put(LoginController());
+  final TextEditingController _joBemailController = TextEditingController();
+  final TextEditingController _joBpasswordController = TextEditingController();
+  bool _isjoBLoading = false;
 
   @override
   void dispose() {
@@ -28,14 +34,48 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
   }
 
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+    if (res == 'success') {
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(
+      //       builder: (context) => const ResponsiveLayout(
+      //         mobileScreenLayout: MobileScreenLayout(),
+      //         webScreenLayout: WebScreenLayout(),
+      //       ),
+      //     ),
+      //     (route) => false);
+
+      // setState(() {
+      //   _isLoading = false;
+      // });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const Homepage(),
+            ),
+          );
+      showSnackBar(context, res);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            "JOB & HIRE",
-            style: TextStyle(
-              color: Colors.red,
+          title: Center(
+            child: Text(
+              "JOB  HIRE",
+              style: TextStyle(
+                color: Colors.red,
+              ),
             ),
           ),
         ),
@@ -51,17 +91,22 @@ class _LoginPageState extends State<LoginPage> {
                     //   child: Container(),
                     //   flex: 2,
                     // ),
-                    Image.asset(
-                      "assets/images/job.png",
-                      fit: BoxFit.cover,
-                      //height: 64,
+                    SizedBox(
+                      height: 250,
+                      width: 250,
+                      child: Image.asset(
+                        "images/logo.png",
+                        fit: BoxFit.cover,
+                        //color: Colors.black,
+                        //height: 64,
+                      ),
                     ),
                     SizedBox(
                       width: 400,
                       child: TextFieldInput(
                         hintText: 'Enter your email',
                         textInputType: TextInputType.emailAddress,
-                        textEditingController: _emailController,
+                        textEditingController: _joBemailController,
                       ),
                     ),
                     const SizedBox(
@@ -72,32 +117,57 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextFieldInput(
                         hintText: 'Enter your password',
                         textInputType: TextInputType.text,
-                        textEditingController: _passwordController,
+                        textEditingController: _joBpasswordController,
                         isPass: true,
                       ),
                     ),
                     const SizedBox(
                       height: 24,
                     ),
-                    Builder(builder: (context) {
-                      return FloatingActionButton.extended(
-                        onPressed: () {
-                          GoogleSignIn().signIn();
-                        },
-                        icon: Image.asset(
-                          "images/google.png",
-                          fit: BoxFit.cover,
-                          height: 32,
-                          width: 32,
+                    SizedBox(
+                      width: 200,
+                      child: InkWell(
+                        child: Container(
+                          child: !_isjoBLoading
+                              ? const Text(
+                                  'Log in',
+                                )
+                              : const CircularProgressIndicator(
+                                  color: Color.fromARGB(198, 18, 190, 116),
+                                ),
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: const ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              color: Colors.blue),
                         ),
-                        label: Text("Sign in with Google"),
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.blue,
-                      );
-                    }),
+                        onTap: loginUser,
+                      ),
+                    ),
+                    // Builder(builder: (context) {
+                    //   return FloatingActionButton.extended(
+                    //     onPressed: () {
+                    //       GoogleSignIn().signIn();
+                    //     },
+                    //     icon: Image.asset(
+                    //       "images/google.png",
+                    //       fit: BoxFit.cover,
+                    //       height: 32,
+                    //       width: 32,
+                    //     ),
+                    //     label: Text("Sign in with Google"),
+                    //     backgroundColor: Colors.white,
+                    //     foregroundColor: Colors.blue,
+                    //   );
+                    // }),
                     SizedBox(
                       height: 10,
                     ),
+
                     Container(
                       child: const Text(
                         'Dont have an account?',
@@ -159,6 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: 200,
                     child: InkWell(
+                      onTap: loginUser,
                       child: Container(
                         child: !_isLoading
                             ? const Text(

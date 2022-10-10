@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:portfolio_app/pages/homepage.dart';
 import 'package:portfolio_app/pages/loginpage.dart';
 import 'package:portfolio_app/pages/signup_screen.dart';
+import 'package:portfolio_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'pages/homepage.dart';
 
@@ -29,14 +31,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //home: Homepage(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        "/": (context) => SignupScreen(),
-        "/home": (context) => Homepage(),
-        "/login": (context) => LoginPage(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        //home: Homepage(),
+        debugShowCheckedModeBanner: false,
+        routes: {
+          "/": (context) => LoginPage(),
+          "/home": (context) => Homepage(),
+          "/login": (context) => LoginPage(),
+        },
+      ),
     );
   }
 }
